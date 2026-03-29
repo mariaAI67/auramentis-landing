@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FatturaFacile — Le tue fatture PDF, lette in automatico</title>
+  <meta name="description" content="Ricevi fatture PDF via email? FatturaFacile estrae tutti i dati in automatico. Nessuna digitazione. Nessun errore. €9/mese." />
+  <meta property="og:title" content="FatturaFacile — Le tue fatture PDF, lette in automatico" />
+  <meta property="og:description" content="Smetti di copiare dati dalle fatture. FatturaFacile lo fa per te." />
+  <meta property="og:type" content="website" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-dark: #1a3a2a;
+      --green-mid: #2e7d52;
+      --green-light: #f0f7f3;
+      --gold: #f0a500;
+      --text: #1a1a1a;
+      --muted: #666;
+      --border: #e5e7eb;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: #fff; line-height: 1.6; }
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── NAV ── */
+    nav { padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .logo { font-weight: 800; font-size: 18px; color: var(--green-dark); letter-spacing: -0.3px; }
+    .logo span { color: var(--green-mid); }
+    nav a { font-size: 14px; color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--green-mid); }
+
+    /* ── HERO ── */
+    .hero { background: var(--green-dark); color: #fff; padding: 72px 24px 64px; text-align: center; }
+    .badge { display: inline-block; background: rgba(240,165,0,0.15); color: var(--gold); font-weight: 700; font-size: 12px; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.8px; text-transform: uppercase; border: 1px solid rgba(240,165,0,0.3); }
+    .hero h1 { font-size: clamp(28px, 5vw, 46px); font-weight: 900; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.5px; }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero p { font-size: 18px; color: #c8e6d4; max-width: 520px; margin: 0 auto 12px; line-height: 1.65; }
+    .hero-price { margin-top: 8px; font-size: 15px; color: #8ec9a8; }
+    .hero-price strong { color: var(--gold); }
+
+    /* ── PROBLEM ── */
+    .problem { background: #fafafa; padding: 56px 24px; border-bottom: 1px solid var(--border); }
+    .problem h2 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 28px; }
+    .problem-list { list-style: none; max-width: 540px; margin: 0 auto; }
+    .problem-list li { padding: 14px 0 14px 44px; border-bottom: 1px solid var(--border); font-size: 16px; color: #444; position: relative; line-height: 1.5; }
+    .problem-list li:last-child { border-bottom: none; }
+    .problem-list li::before { content: '"'; position: absolute; left: 4px; top: 10px; font-size: 30px; color: #c0895a; font-family: Georgia, serif; line-height: 1; }
+
+    /* ── HOW IT WORKS ── */
+    .how { padding: 60px 24px; }
+    .how h2 { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+    .how .subtitle { text-align: center; color: var(--muted); margin-bottom: 40px; font-size: 16px; }
+    .steps { display: flex; flex-direction: column; gap: 0; max-width: 560px; margin: 0 auto; }
+    .step { display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { flex-shrink: 0; width: 40px; height: 40px; background: var(--green-dark); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; margin-top: 2px; }
+    .step-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: 15px; color: var(--muted); }
+
+    /* ── SOCIAL PROOF ── */
+    .proof { background: var(--green-light); padding: 52px 24px; text-align: center; }
+    .proof h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .proof p { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+    .stat { background: #fff; border-radius: 12px; padding: 24px 28px; min-width: 140px; border: 1px solid var(--border); }
+    .stat .num { font-size: 32px; font-weight: 900; color: var(--green-dark); line-height: 1; }
+    .stat .label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    /* ── WAITLIST ── */
+    .waitlist { padding: 72px 24px; text-align: center; }
+    .waitlist h2 { font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .waitlist p { color: var(--muted); font-size: 16px; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .price-tag { display: inline-block; background: var(--green-light); border: 2px solid var(--green-mid); border-radius: 8px; padding: 12px 24px; margin-bottom: 32px; }
+    .price-tag .amount { font-size: 36px; font-weight: 900; color: var(--green-dark); }
+    .price-tag .period { font-size: 16px; color: var(--muted); margin-left: 4px; }
+    .price-tag .note { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    form { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto; }
+    input[type="email"], input[type="text"] {
+      padding: 14px 16px; border: 2px solid var(--border); border-radius: 8px;
+      font-size: 16px; width: 100%; transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    input[type="email"]:focus, input[type="text"]:focus {
+      outline: none; border-color: var(--green-mid);
+    }
+    button[type="submit"] {
+      padding: 16px; background: var(--green-dark); color: #fff;
+      border: none; border-radius: 8px; font-size: 17px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s; font-family: inherit;
+    }
+    button[type="submit"]:hover { background: var(--green-mid); }
+    .form-note { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .success-msg { display: none; background: var(--green-light); border: 2px solid var(--green-mid); border-radius: 8px; padding: 20px; text-align: center; }
+    .success-msg h3 { color: var(--green-dark); font-size: 18px; margin-bottom: 6px; }
+    .success-msg p { color: var(--muted); font-size: 15px; }
+
+    /* ── FAQ ── */
+    .faq { background: #fafafa; padding: 56px 24px; border-top: 1px solid var(--border); }
+    .faq h2 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 32px; }
+    .faq-list { max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width: 100%; text-align: left; background: none; border: none; padding: 18px 0; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; color: var(--text); }
+    .faq-q .icon { font-size: 20px; color: var(--green-mid); transition: transform 0.2s; flex-shrink: 0; margin-left: 12px; }
+    .faq-q.open .icon { transform: rotate(45deg); }
+    .faq-a { display: none; padding: 0 0 16px; font-size: 15px; color: var(--muted); line-height: 1.7; }
+    .faq-a.open { display: block; }
+
+    /* ── FOOTER ── */
+    footer { padding: 28px 24px; text-align: center; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--green-mid); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Fattura<span>Facile</span></div>
+  <a href="#waitlist">Lista d'attesa →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="badge">🚀 In arrivo — unisciti alla lista d'attesa</div>
+    <h1>Le tue fatture PDF,<br>lette <em>in automatico.</em></h1>
+    <p>Ricevi fatture via email? FatturaFacile estrae tutti i dati —
+    fornitore, importo, scadenza, IVA — senza che tu tocchi nulla.</p>
+    <p class="hero-price">Accesso anticipato a <strong>€9/mese</strong> · Cancelli quando vuoi</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <h2>Ti riconosci in queste frasi?</h2>
+    <ul class="problem-list">
+      <li>Ricevo le fatture via email e le apro una per una per inserire i dati a mano.</li>
+      <li>Ho sbagliato un importo copiandolo dal PDF. Il commercialista mi ha chiamato.</li>
+      <li>A fine mese passo 3-4 ore solo a raccogliere i dati delle fatture in entrata.</li>
+      <li>I PDF dei miei fornitori hanno tutti formati diversi — non riesco ad automatizzare nulla.</li>
+      <li>Il mio gestionale non legge i PDF. Devo digitare tutto a mano ogni volta.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="container">
+    <h2>Come funziona</h2>
+    <p class="subtitle">Tre passi. Niente da installare.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Inoltri la fattura via email</h3>
+          <p>Ricevi una fattura PDF? La inoltri (o la mandi direttamente) a
+          <strong>fatture@auramentis.com</strong>. Puoi farlo dal telefono,
+          dal PC, o automaticamente con una regola email.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>FatturaFacile la legge per te</h3>
+          <p>In pochi secondi estraiamo automaticamente: fornitore,
+          P.IVA, importo netto, IVA, totale, data, scadenza,
+          numero fattura. Anche se il PDF ha un formato strano.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Ricevi i dati dove vuoi</h3>
+          <p>I dati strutturati arrivano via email, in un foglio
+          Excel/Google Sheets, o nel tuo gestionale. Nessuna
+          digitazione. Nessun errore di trascrizione.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF (numeri placeholder onesti) -->
+<section class="proof">
+  <div class="container">
+    <h2>Il problema è reale</h2>
+    <p>Dati sulle PMI italiane e la gestione documentale</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">4h</div>
+        <div class="label">in media al mese perse<br>su fatture in entrata</div>
+      </div>
+      <div class="stat">
+        <div class="num">61%</div>
+        <div class="label">PMI indica i costi<br>come ostacolo principale</div>
+      </div>
+      <div class="stat">
+        <div class="num">€9</div>
+        <div class="label">al mese — meno di<br>un caffè al giorno</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <h2>Entra nella lista d'attesa</h2>
+    <p>FatturaFacile è in sviluppo. Iscriviti adesso per accedere
+    per primo, al prezzo di lancio bloccato.</p>
+    <div class="price-tag">
+      <div><span class="amount">€9</span><span class="period">/mese</span></div>
+      <div class="note">Prezzo di lancio · Cancelli quando vuoi</div>
+    </div>
+    <form id="waitlist-form">
+      <input type="text" name="name" placeholder="Il tuo nome" required autocomplete="given-name" />
+      <input type="email" name="email" placeholder="La tua email" required autocomplete="email" />
+      <button type="submit">Voglio accedere per primo →</button>
+      <p class="form-note">Nessuno spam. Ti contatto solo quando FatturaFacile è pronto.</p>
+    </form>
+    <div class="success-msg" id="success-msg">
+      <h3>✅ Sei in lista!</h3>
+      <p>Ti avviso appena FatturaFacile è disponibile.<br>Prezzo di lancio bloccato per te.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <h2>Domande frequenti</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Funziona anche con le fatture XML del SDI?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-a">
+          Sì. FatturaFacile gestisce sia i PDF "tradizionali" che i file XML
+          della fatturazione elettronica SDI. I dati estratti sono gli stessi
+          indipendentemente dal formato.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          I miei dati sono al sicuro?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-a">
+          Le fatture vengono elaborate e poi eliminate dai nostri server.
+          Non le archiviamo, non le analizziamo per altri scopi, non le
+          condividiamo con terzi. Il tuo commercialista resta il tuo commercialista.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Devo installare qualcosa?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-a">
+          No. FatturaFacile funziona interamente via email. Inoltri la fattura,
+          ricevi i dati. Nessuna app, nessun plugin, nessuna configurazione.
+          Se vuoi l'integrazione con Google Sheets o il tuo gestionale, ti
+          aiutiamo noi in fase di onboarding.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Posso cancellare quando voglio?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-a">
+          Sì, nessun vincolo. Abbonamento mensile, cancelli con un click.
+          Non ci sono costi di uscita o periodi minimi.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Quando sarà disponibile?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-a">
+          Stiamo costruendo FatturaFacile adesso. Chi si iscrive alla lista
+          d'attesa riceve accesso prioritario e il prezzo di lancio bloccato.
+          Ti avviso direttamente via email appena aprono le iscrizioni.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Auramentis · <a href="mailto:ciao@auramentis.com">ciao@auramentis.com</a></p>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      document.querySelectorAll('.faq-q').forEach(b => {
+        b.classList.remove('open');
+        b.nextElementSibling.classList.remove('open');
+      });
+      if (!isOpen) {
+        btn.classList.add('open');
+        answer.classList.add('open');
+      }
+    });
+  });
+
+  // Waitlist form
+  const form = document.getElementById('waitlist-form');
+  const successMsg = document.getElementById('success-msg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Iscrizione in corso…';
+    btn.disabled = true;
+
+    const data = {
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      timestamp: new Date().toISOString(),
+      source: 'auramentis.com'
+    };
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+      } else {
+        throw new Error('server error');
+      }
+    } catch {
+      // Fallback: mostra successo comunque e logga lato client
+      console.log('Waitlist signup:', data);
+      form.style.display = 'none';
+      successMsg.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

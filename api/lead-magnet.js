@@ -13,8 +13,6 @@ export default async function handler(req, res) {
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
   const cleanName = (name || 'imprenditore').trim();
   const cleanEmail = email.toLowerCase().trim();
-  let resendStatus = null;
-  let resendError = null;
 
   const GUIDE_CONTENTS = {
     'scadenze-fiscali': {
@@ -103,14 +101,10 @@ export default async function handler(req, res) {
           `
         })
       });
-      resendStatus = emailRes.status;
       if (!emailRes.ok) {
-        const errBody = await emailRes.text();
-        resendError = errBody;
-        console.error('Resend error:', emailRes.status, errBody);
+        console.error('Resend error:', emailRes.status, await emailRes.text());
       }
     } catch (e) {
-      resendError = e.message;
       console.error('Resend exception:', e.message);
     }
   }
@@ -133,9 +127,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({
-    success: true,
-    message: 'Guida inviata alla tua email!',
-    debug: { resendStatus, resendError: resendError || undefined }
-  });
+  return res.status(200).json({ success: true, message: 'Guida inviata alla tua email!' });
 }

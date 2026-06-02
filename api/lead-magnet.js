@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const cleanName = (name || 'imprenditore').trim();
   const cleanEmail = email.toLowerCase().trim();
 
@@ -125,6 +126,31 @@ export default async function handler(req, res) {
     } catch (e) {
       console.error('Telegram error:', e.message);
     }
+  }
+
+  // ── Salva lead su GitHub data/leads.json ──────────────────────────────────
+  if (GITHUB_TOKEN) {
+    try {
+      const REPO = 'mariaAI67/auramentis-landing';
+      const PATH = 'data/leads.json';
+      const ghHeaders = {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+      const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, { headers: ghHeaders });
+      const fileData = await getRes.json();
+      const current = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
+      current.push({ name: cleanName, email: cleanEmail, guide, date: new Date().toISOString() });
+      await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+        method: 'PUT', headers: ghHeaders,
+        body: JSON.stringify({
+          message: `lead: ${cleanEmail} — ${guide}`,
+          content: Buffer.from(JSON.stringify(current, null, 2)).toString('base64'),
+          sha: fileData.sha, branch: 'main'
+        })
+      });
+    } catch (e) { console.error('GitHub leads error:', e.message); }
   }
 
   return res.status(200).json({ success: true, message: 'Guida inviata alla tua email!' });

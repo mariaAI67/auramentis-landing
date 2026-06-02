@@ -13,6 +13,8 @@ export default async function handler(req, res) {
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
   const cleanName = (name || 'imprenditore').trim();
   const cleanEmail = email.toLowerCase().trim();
+  let resendStatus = null;
+  let resendError = null;
 
   const GUIDE_CONTENTS = {
     'scadenze-fiscali': {
@@ -79,16 +81,16 @@ export default async function handler(req, res) {
   // ── Invia guida via email ──────────────────────────────────────────────────
   if (RESEND_API_KEY) {
     try {
-      await fetch('https://api.resend.com/emails', {
+      const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${RESEND_API_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'Valeria <valeria@auramentis.com>',
+          from: 'Valeria <noreply@auramentis.com>',
           to: [cleanEmail],
-          subject: `📋 ${guideData.title}`,
+          subject: `La tua guida: ${guideData.title}`,
           html: `
             <!DOCTYPE html><html lang="it"><body style="font-family:system-ui,sans-serif;max-width:640px;margin:0 auto;padding:32px 16px;color:#1a1a2e;background:#fff">
               ${guideData.html}
@@ -101,8 +103,15 @@ export default async function handler(req, res) {
           `
         })
       });
+      resendStatus = emailRes.status;
+      if (!emailRes.ok) {
+        const errBody = await emailRes.text();
+        resendError = errBody;
+        console.error('Resend error:', emailRes.status, errBody);
+      }
     } catch (e) {
-      console.error('Resend error:', e.message);
+      resendError = e.message;
+      console.error('Resend exception:', e.message);
     }
   }
 
@@ -124,5 +133,9 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ success: true, message: 'Guida inviata alla tua email!' });
+  return res.status(200).json({
+    success: true,
+    message: 'Guida inviata alla tua email!',
+    debug: { resendStatus, resendError: resendError || undefined }
+  });
 }

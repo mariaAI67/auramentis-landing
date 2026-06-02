@@ -88,7 +88,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'Valeria <noreply@auramentis.com>',
+          from: 'Valeria <noreply@pmi.auramentis.com>',
           to: [cleanEmail],
           subject: `La tua guida: ${guideData.title}`,
           html: `
